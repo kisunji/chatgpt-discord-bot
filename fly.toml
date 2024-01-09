@@ -1,0 +1,14 @@
+app = "chatgpt-discord-bot"
+primary_region = "yyz"
+
+[build]
+  builder = "paketobuildpacks/builder:base"
+  buildpacks = ["gcr.io/paketo-buildpacks/go"]
+
+[env]
+  PORT = "8080"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  processes = ["app"]
