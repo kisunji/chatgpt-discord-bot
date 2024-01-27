@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/sashabaranov/go-openai"
@@ -116,8 +117,20 @@ func main() {
 			log.Println(err)
 			return
 		}
-		if _, err := s.ChannelMessageSendReply(ChannelID, resp, i.Reference()); err != nil {
-			log.Println("error sending reply: " + err.Error())
+		// break up multi line responses
+		multi := strings.Split(resp, ". ")
+		for j, msg := range multi {
+			if j == 0 {
+				if _, err := s.ChannelMessageSendReply(ChannelID, msg, i.Reference()); err != nil {
+					log.Println("error sending reply: " + err.Error())
+				}
+			} else {
+				s.ChannelTyping(ChannelID)
+				time.Sleep(time.Duration(len(msg)*50) * time.Millisecond)
+				if _, err := s.ChannelMessageSend(ChannelID, msg); err != nil {
+					log.Println("error sending reply: " + err.Error())
+				}
+			}
 		}
 	})()
 
