@@ -126,7 +126,7 @@ func main() {
 				}
 			} else {
 				s.ChannelTyping(ChannelID)
-				time.Sleep(time.Duration(len(msg)*50) * time.Millisecond)
+				time.Sleep(time.Duration(len(msg)*10) * time.Millisecond)
 				if _, err := s.ChannelMessageSend(ChannelID, msg); err != nil {
 					log.Println("error sending reply: " + err.Error())
 				}
